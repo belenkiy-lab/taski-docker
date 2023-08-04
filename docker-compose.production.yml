@@ -11,6 +11,7 @@ services:
     env_file: .env
     volumes:
       - pg_data_production:/var/lib/postgresql/data
+    restart: unless-stopped
 
   backend:
     image: belenkiy/taski_backend
@@ -19,6 +20,13 @@ services:
       - static_volume:/backend_static
     depends_on:
       - db
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 30s
+    restart: unless-stopped
 
   frontend:
     image: belenkiy/taski_frontend
@@ -26,6 +34,7 @@ services:
     command: cp -r /app/build/. /frontend_static/
     volumes:
       - static_volume:/frontend_static
+    restart: on-failure
 
   gateway:
     image: belenkiy/taski_gateway
@@ -35,3 +44,10 @@ services:
       - 8000:80 
     depends_on:
       - backend
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 30s
+    restart: unless-stopped
