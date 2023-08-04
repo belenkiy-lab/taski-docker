@@ -89,7 +89,6 @@ jobs:
           # на сервере и в docker-compose.yml не указывать версию
           tags: belenkiy/taski_backend:latest 
 
-
   frontend_tests:
     runs-on: ubuntu-latest
     name: Test frontend Code
